@@ -31,6 +31,7 @@ client.on(Events.MessageCreate, async (message) => {
     ).results[0].flagged;
 
   if (await moderate([{ type: 'text', text: message.cleanContent }])) {
+    console.log(`Message flagged: ${message.cleanContent}` + ` by ${message.author.tag}`);
     await message.delete();
     return message.channel.send(`👀`);
   }
@@ -40,6 +41,7 @@ client.on(Events.MessageCreate, async (message) => {
       a.contentType?.startsWith('image/') &&
       (await moderate([{ type: 'image_url', image_url: { url: a.url } }]))
     ) {
+      console.log(`Image flagged: ${a.url}` + ` by ${message.author.tag}`);
       await message.delete();
       return message.channel.send(`👀`);
     }
