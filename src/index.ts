@@ -18,7 +18,7 @@ client.once(Events.ClientReady, (readyClient) => {
 client.on(Events.MessageCreate, async (message) => {
   if (message.author.bot) return;
   if (!message.member) return;
-  if (message.member.roles.highest.id === "1263473844908200016") return; // dont moderate vetted users
+  if (message.member.roles.highest.id !== "1263473844908200016") return; // dont moderate vetted users
 
   type Input =
     | { type: 'text'; text: string }
