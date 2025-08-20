@@ -1,4 +1,4 @@
-import { Client, Events, GatewayIntentBits } from 'discord.js';
+import { Client, Events, GatewayIntentBits, GuildMemberRoleManager, RoleManager } from 'discord.js';
 import 'dotenv/config';
 import OpenAI from 'openai';
 const openai = new OpenAI({ apiKey: process.env.OPENAI_APIKEY });
@@ -17,6 +17,8 @@ client.once(Events.ClientReady, (readyClient) => {
 
 client.on(Events.MessageCreate, async (message) => {
   if (message.author.bot) return;
+  if (!message.member) return;
+  if (message.member.roles.highest.id === "1263473844908200016") return; // dont moderate vetted users
 
   type Input =
     | { type: 'text'; text: string }
