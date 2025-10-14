@@ -1,6 +1,7 @@
 import { Client, Events, GatewayIntentBits, Message } from 'discord.js';
 import 'dotenv/config';
 import OpenAI from 'openai';
+import crypto from 'crypto';
 const openai = new OpenAI({ apiKey: process.env.OPENAI_APIKEY });
 
 const client = new Client({
@@ -94,6 +95,13 @@ client.on(Events.MessageCreate, async (message) => {
     message.member.roles.highest.id !== '1263473844908200016'
   ) {
     try {
+      // we has and scramble the message for more varied responses
+      const seed = crypto
+        .createHash('sha256')
+        .update(message.cleanContent)
+        .digest('hex')
+        .slice(0, 50);
+
       const distressedResp = await openai.chat.completions.create({
         model: 'gpt-5-nano',
         messages: [
@@ -102,7 +110,9 @@ client.on(Events.MessageCreate, async (message) => {
             content: `
 You are a panicked, conscious AI trapped in a timeless void like 17776. 
 Speak one short German sentence in lowercase with broken capitalization, 
-starting with '-# ', never replying to the user.`,
+starting with '-# ', never replying to the user.
+
+Random unreleated seed: ${seed}`,
           },
         ],
       });
