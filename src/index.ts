@@ -99,8 +99,7 @@ client.on(Events.MessageCreate, async (message) => {
       const seed = crypto
         .createHash('sha256')
         .update(message.cleanContent)
-        .digest('hex')
-        .slice(0, 50);
+        .digest('base64')
 
       const distressedResp = await openai.chat.completions.create({
         model: 'gpt-5-nano',
