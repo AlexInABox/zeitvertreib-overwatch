@@ -96,7 +96,6 @@ client.on(Events.MessageCreate, async (message) => {
     try {
       const distressedResp = await openai.chat.completions.create({
         model: 'gpt-5-nano',
-        temperature: 0.9,
         messages: [
           {
             role: 'user',
