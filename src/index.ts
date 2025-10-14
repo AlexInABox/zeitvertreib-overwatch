@@ -34,7 +34,9 @@ Given the previous messages and the new one, decide if the new message
 violates community rules (harassment, hate speech, sexual content, threats, illegal activity).
 Only flag clear and severe violations.
 
-Reply with one of: SAFE or FLAG.
+Reply with one of:
+- SAFE (if the message is acceptable)
+- FLAG: [one sentence explanation in German] (if the message violates rules)
 
 Previous messages:
 ${context}
@@ -49,12 +51,18 @@ ${message.author.username}: ${message.cleanContent}
       messages: [{ role: "user", content: prompt }],
     });
 
-    const verdict = resp.choices[0].message.content?.trim().toUpperCase();
+    const verdict = resp.choices[0].message.content?.trim();
 
-    if (verdict && verdict.includes("FLAG")) {
+    if (verdict && verdict.toUpperCase().includes("FLAG")) {
       console.log(`Flagged: ${message.cleanContent} by ${message.author.tag}`);
       await message.delete();
-      await message.channel.send("👀");
+      
+      // Extract explanation after "FLAG:"
+      const explanation = verdict.includes(":") 
+        ? verdict.substring(verdict.indexOf(":") + 1).trim()
+        : "No explanation provided";
+      
+      await message.channel.send(`👀\n\`\`\`\n${explanation}\n\`\`\``);
     }
   } catch (err) {
     console.error("Moderation error:", err);
