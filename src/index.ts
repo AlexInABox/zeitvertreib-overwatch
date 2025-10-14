@@ -32,7 +32,7 @@ client.on(Events.MessageCreate, async (message) => {
   const prompt = `
 You are a Discord moderation model for an SCP:SL gaming community.
 Given the last 3 messages and a new message, decide if the new message violates community rules (harassment, hate speech, threats, sexual content, illegal activity).
-Only falg clear and severe violations.
+Only flag clear and severe violations.
 
 Note: Messages about in-game scenarios, roleplay actions, or hypothetical game mechanics are allowed, even if they include violence.
 
@@ -49,7 +49,7 @@ ${message.author.username}: ${message.cleanContent}
 
   try {
     const resp = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-5-mini",
       messages: [{ role: "user", content: prompt }],
     });
 
