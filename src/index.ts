@@ -18,7 +18,8 @@ client.once(Events.ClientReady, (readyClient) => {
 client.on(Events.MessageCreate, async (message) => {
   if (message.author.bot) return;
   if (!message.member) return;
-  if (message.member.roles.highest.id !== "1263473844908200016") return; // skip vetted users
+  //if (message.member.roles.highest.id !== "1263473844908200016") return; // skip vetted users
+  if (message.member.roles.cache.has("997161653542068225")) return; // skip users with the 'Teammitglied' role
 
   // fetch last 3 messages before current one for context
   const prevMessages = await message.channel.messages.fetch({ limit: 4 });
