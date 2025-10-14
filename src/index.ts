@@ -37,6 +37,7 @@ Given the last 3 messages and a new message, decide if the new message violates 
 Only flag clear and severe violations.
 
 Note: Messages about in-game scenarios, roleplay actions, or hypothetical game mechanics are allowed, even if they include violence.
+Do not repeat or mention specific flagged words or phrases in your explanation — keep it vague to avoid conveying the original content.
 
 Reply with one of:
 - SAFE (if the message is acceptable)
