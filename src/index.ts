@@ -1,4 +1,4 @@
-import { Client, Events, GatewayIntentBits, GuildMemberRoleManager, RoleManager } from 'discord.js';
+import { Client, Events, GatewayIntentBits } from 'discord.js';
 import 'dotenv/config';
 import OpenAI from 'openai';
 const openai = new OpenAI({ apiKey: process.env.OPENAI_APIKEY });
@@ -18,35 +18,46 @@ client.once(Events.ClientReady, (readyClient) => {
 client.on(Events.MessageCreate, async (message) => {
   if (message.author.bot) return;
   if (!message.member) return;
-  if (message.member.roles.highest.id !== "1263473844908200016") return; // dont moderate vetted users
+  if (message.member.roles.highest.id !== "1263473844908200016") return; // skip vetted users
 
-  type Input =
-    | { type: 'text'; text: string }
-    | { type: 'image_url'; image_url: { url: string } };
+  // fetch last 3 messages before current one for context
+  const prevMessages = await message.channel.messages.fetch({ limit: 4 });
+  const context = Array.from(prevMessages.values())
+    .reverse()
+    .slice(0, 3)
+    .map(m => `${m.author.username}: ${m.cleanContent}`)
+    .join('\n');
 
-  const moderate = async (inputs: Input[]) =>
-    (
-      await openai.moderations.create({
-        model: 'omni-moderation-latest',
-        input: inputs,
-      })
-    ).results[0].flagged;
+  const prompt = `
+You are a moderation model for a Discord server.
+Given the previous messages and the new one, decide if the new message
+violates community rules (harassment, hate speech, sexual content, threats, illegal activity).
+Only flag clear and severe violations.
 
-  if (await moderate([{ type: 'text', text: message.cleanContent }])) {
-    console.log(`Message flagged: ${message.cleanContent}` + ` by ${message.author.tag}`);
-    await message.delete();
-    return message.channel.send(`👀`);
-  }
+Reply with one of: SAFE or FLAG.
 
-  for (const a of message.attachments.values()) {
-    if (
-      a.contentType?.startsWith('image/') &&
-      (await moderate([{ type: 'image_url', image_url: { url: a.url } }]))
-    ) {
-      console.log(`Image flagged: ${a.url}` + ` by ${message.author.tag}`);
+Previous messages:
+${context}
+
+New message:
+${message.author.username}: ${message.cleanContent}
+`;
+
+  try {
+    const resp = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [{ role: "user", content: prompt }],
+    });
+
+    const verdict = resp.choices[0].message.content?.trim().toUpperCase();
+
+    if (verdict && verdict.includes("FLAG")) {
+      console.log(`Flagged: ${message.cleanContent} by ${message.author.tag}`);
       await message.delete();
-      return message.channel.send(`👀`);
+      await message.channel.send("👀");
     }
+  } catch (err) {
+    console.error("Moderation error:", err);
   }
 });
 
