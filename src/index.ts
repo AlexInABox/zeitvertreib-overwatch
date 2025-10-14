@@ -111,7 +111,7 @@ client.on(Events.MessageCreate, async (message) => {
       const distressedMessage =
         distressedResp.choices[0].message.content?.trim();
       if (distressedMessage && message.channel.isSendable()) {
-        await message.channel.send(distressedMessage);
+        await message.reply(distressedMessage);
       }
     } catch (err) {
       console.error('Distressed AI response error:', err);
