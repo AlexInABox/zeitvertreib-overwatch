@@ -30,10 +30,11 @@ client.on(Events.MessageCreate, async (message) => {
     .join('\n');
 
   const prompt = `
-You are a moderation model for a Discord server.
-Given the previous messages and the new one, decide if the new message
-violates community rules (harassment, hate speech, sexual content, threats, illegal activity).
-Only flag clear and severe violations.
+You are a Discord moderation model for an SCP:SL gaming community.
+Given the last 3 messages and a new message, decide if the new message violates community rules (harassment, hate speech, threats, sexual content, illegal activity).
+Only falg clear and severe violations.
+
+Note: Messages about in-game scenarios, roleplay actions, or hypothetical game mechanics are allowed, even if they include violence.
 
 Reply with one of:
 - SAFE (if the message is acceptable)
