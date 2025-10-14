@@ -1,4 +1,4 @@
-import { Client, Events, GatewayIntentBits } from 'discord.js';
+import { Client, Events, GatewayIntentBits, Message } from 'discord.js';
 import 'dotenv/config';
 import OpenAI from 'openai';
 const openai = new OpenAI({ apiKey: process.env.OPENAI_APIKEY });
@@ -15,14 +15,14 @@ client.once(Events.ClientReady, (readyClient) => {
   console.log(`Logged in as ${readyClient.user.tag}!`);
 });
 
-client.on(Events.MessageCreate, async (message) => {
+async function moderateMessage(message: Message) {
   if (message.author.bot) return;
   if (!message.member) return;
   //if (message.member.roles.highest.id !== "1263473844908200016") return; // skip vetted users
   if (message.member.roles.cache.has("997161653542068225")) return; // skip users with the 'Teammitglied' role
 
   // fetch last 3 messages before current one for context
-  const prevMessages = await message.channel.messages.fetch({ limit: 4 });
+  const prevMessages = await message.channel.messages.fetch({ limit: 4, before: message.id });
   const context = Array.from(prevMessages.values())
     .reverse()
     .slice(0, 3)
@@ -64,11 +64,19 @@ ${message.author.username}: ${message.cleanContent}
         ? verdict.substring(verdict.indexOf(":") + 1).trim()
         : "No explanation provided";
       
-      await message.channel.send(`👀\n\`\`\`\n${explanation}\n\`\`\``);
+      if (message.channel.isSendable()) {
+        await message.channel.send(`\`\`\`\n${explanation}\n\`\`\``);
+      }
     }
   } catch (err) {
     console.error("Moderation error:", err);
   }
+}
+
+client.on(Events.MessageCreate, moderateMessage);
+
+client.on(Events.MessageUpdate, async (_oldMessage, newMessage) => {
+  await moderateMessage(newMessage);
 });
 
 client.login(process.env.BOT_TOKEN);
