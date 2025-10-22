@@ -29,7 +29,7 @@ async function moderateMessage(message: Message) {
   const context = Array.from(prevMessages.values())
     .reverse()
     .slice(0, 3)
-    .map((m) => `${m.author.username}: ${m.cleanContent}`)
+    .map((m) => `${m.author.username}: ${m.content}`)
     .join('\n');
 
   const prompt = `
@@ -48,7 +48,7 @@ Previous messages:
 ${context}
 
 New message:
-${message.author.username}: ${message.cleanContent}
+${message.author.username}: ${message.content}
 `;
 
   try {
