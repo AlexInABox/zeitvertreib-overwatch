@@ -86,7 +86,7 @@ client.on(Events.MessageCreate, async (message) => {
   if (!messageExists) return;
 
   //Check if bot was mentioned
-  if (!message.mentions.has(client.user!)) return;
+  if (!message.mentions.users.has(client.user?.id!)) return;
 
   // Respond to non-vetted users with distressed AI message
   if (
