@@ -84,7 +84,12 @@ client.on(Events.MessageCreate, async (message) => {
     .fetch(message.id)
     .catch(() => null);
   if (!messageExists) return;
-  const ticketPhrases = [['wie', 'entbann'], ['wo', 'entbann'], ['ticket'], ['support']];
+  const ticketPhrases = [
+    ['wie', 'entbann'],
+    ['wo', 'entbann'],
+    ['ticket'],
+    ['support'],
+  ];
 
   const supportChannelId = '889505316994166825';
   const messageContentLower = message.content.toLowerCase();
