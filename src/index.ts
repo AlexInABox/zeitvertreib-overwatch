@@ -84,21 +84,20 @@ client.on(Events.MessageCreate, async (message) => {
     .fetch(message.id)
     .catch(() => null);
   if (!messageExists) return;
-  const ticketPhrases = [
-    ['wie', 'entbann'],
-    ['ticket'],
-    ['support']
-  ];
-
+  const ticketPhrases = [['wie', 'entbann'], ['ticket'], ['support']];
 
   const supportChannelId = '889505316994166825';
   const messageContentLower = message.content.toLowerCase();
 
-  if (ticketPhrases.some(group =>
-  group.every(word => messageContentLower.includes(word.toLowerCase())))) {
-    await message.reply(
-      `<#${supportChannelId}>`,
-    );
+  if (
+    ticketPhrases.some((group) =>
+      group.every((word) => messageContentLower.includes(word.toLowerCase())),
+    )
+  ) {
+    await message.reply({
+      content: `<#${supportChannelId}>`,
+      allowedMentions: { repliedUser: false },
+    });
     return;
   }
 });
