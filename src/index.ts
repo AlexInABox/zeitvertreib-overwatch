@@ -92,7 +92,7 @@ client.on(Events.MessageCreate, async (message) => {
 
 
   const supportChannelId = '889505316994166825';
-  const messageContentLower = message.cleanContent.toLowerCase();
+  const messageContentLower = message.content.toLowerCase();
 
   if (ticketPhrases.some(group =>
   group.every(word => messageContentLower.includes(word.toLowerCase())))) {
