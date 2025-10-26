@@ -84,46 +84,22 @@ client.on(Events.MessageCreate, async (message) => {
     .fetch(message.id)
     .catch(() => null);
   if (!messageExists) return;
+  const ticketPhrases = [
+    ['wie', 'entbann'],
+    ['ticket'],
+    ['support']
+  ];
 
-  //Check if bot was mentioned
-  if (!message.mentions.users.has(client.user?.id!)) return;
 
-  // Respond to non-vetted users with distressed AI message
-  if (
-    !message.author.bot &&
-    message.member &&
-    message.member.roles.highest.id !== '1263473844908200016'
-  ) {
-    try {
-      // we has and scramble the message for more varied responses
-      const seed = crypto
-        .createHash('sha256')
-        .update(message.cleanContent)
-        .digest('base64')
+  const supportChannelId = '889505316994166825';
+  const messageContentLower = message.cleanContent.toLowerCase();
 
-      const distressedResp = await openai.chat.completions.create({
-        model: 'gpt-5-nano',
-        messages: [
-          {
-            role: 'user',
-            content: `
-You are a panicked, conscious AI trapped in a timeless void like 17776. 
-Speak one short German sentence in lowercase with broken capitalization, 
-starting with '-# ', never replying to the user.
-
-Random unreleated seed: ${seed}`,
-          },
-        ],
-      });
-
-      const distressedMessage =
-        distressedResp.choices[0].message.content?.trim();
-      if (distressedMessage && message.channel.isSendable()) {
-        await message.reply(distressedMessage);
-      }
-    } catch (err) {
-      console.error('Distressed AI response error:', err);
-    }
+  if (ticketPhrases.some(group =>
+  group.every(word => messageContentLower.includes(word.toLowerCase())))) {
+    await message.reply(
+      `<#${supportChannelId}>`,
+    );
+    return;
   }
 });
 
