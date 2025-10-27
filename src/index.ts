@@ -87,6 +87,12 @@ client.on(Events.MessageCreate, async (message) => {
   const ticketPhrases = [
     ['wie', 'entbann'],
     ['wo', 'entbann'],
+    ['wo', 'melde'],
+    ['wie', 'melde'],
+    ['wo', 'report'],
+    ['wie', 'report'],
+    ['wo', 'beschwer'],
+    ['wie', 'beschwer'],
     ['ticket'],
     ['support'],
   ];
