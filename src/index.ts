@@ -1,7 +1,6 @@
 import { Client, Events, GatewayIntentBits, Message } from 'discord.js';
 import 'dotenv/config';
 import OpenAI from 'openai';
-import crypto from 'crypto';
 const openai = new OpenAI({ apiKey: process.env.OPENAI_APIKEY });
 
 const client = new Client({
@@ -21,20 +20,26 @@ async function moderateMessage(message: Message) {
   if (!message.member) return;
   if (message.member.roles.cache.has('997161653542068225')) return; // skip users with the 'Teammitglied' role
 
-  // fetch last 3 messages before current one for context
+  // fetch last 6 messages before current one for context
   const prevMessages = await message.channel.messages.fetch({
-    limit: 4,
+    limit: 7,
     before: message.id,
   });
   const context = Array.from(prevMessages.values())
     .reverse()
-    .slice(0, 3)
-    .map((m) => `${m.author.username}: ${m.content}`)
+    .slice(0, 6)
+    .map((m) => {
+      const content =
+        m.content.length > 200
+          ? m.content.substring(0, 200) + ' [CONTENT CUT DUE TO LENGTH]'
+          : m.content;
+      return `${m.author.username}: ${content}`;
+    })
     .join('\n');
 
   const prompt = `
 You are a Discord moderation model for an SCP:SL gaming community.
-Given the last 3 messages and a new message, decide if the new message violates community rules (harassment, hate speech, threats, sexual content, illegal activity).
+Given the last 6 messages and a new message, decide if the new message violates community rules (harassment, hate speech, threats, sexual content, illegal activity).
 Only flag clear and severe violations.
 
 Note: Messages about in-game scenarios, roleplay actions, or hypothetical game mechanics are allowed, even if they include violence.
