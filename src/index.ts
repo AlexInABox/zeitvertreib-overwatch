@@ -71,7 +71,7 @@ Do not repeat or mention specific flagged words or phrases in your explanation â
 
 Reply with one of:
 - SAFE (if the message is acceptable)
-- FLAG: [one sentence explanation in German] (if the message violates rules) format: "FLAG: {username} hat eine {natur der verletzung} Nachricht geschrieben."
+- FLAG: [one sentence explanation in German] (if the message violates rules) format: "FLAG: {username} hat eine {natur der verletzung} .. (Nachricht geschrieben.)"
 
 Previous messages:
 ${context}
