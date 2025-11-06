@@ -20,6 +20,30 @@ async function moderateMessage(message: Message) {
   if (!message.member) return;
   if (message.member.roles.cache.has('997161653542068225')) return; // skip users with the 'Teammitglied' role
 
+  // Check if the current message has a .txt attachment and fetch its content
+  let messageContent = message.content;
+  const txtAttachment = message.attachments.find((att) =>
+    att.name?.toLowerCase().endsWith('.txt'),
+  );
+
+  if (txtAttachment) {
+    try {
+      const response = await fetch(txtAttachment.url);
+      const text = await response.text();
+      const fileContent =
+        text.substring(0, 200) +
+        (text.length > 200 ? ' [CONTENT CUT DUE TO LENGTH]' : '');
+
+      if (messageContent) {
+        messageContent = `${messageContent} [TXT File: ${fileContent}]`;
+      } else {
+        messageContent = fileContent;
+      }
+    } catch (err) {
+      console.error('Error fetching txt file:', err);
+    }
+  }
+
   // fetch last 6 messages before current one for context
   const prevMessages = await message.channel.messages.fetch({
     limit: 7,
@@ -53,7 +77,7 @@ Previous messages:
 ${context}
 
 New message:
-${message.author.username}: ${message.content}
+${message.author.username}: ${messageContent}
 `;
 
   try {
