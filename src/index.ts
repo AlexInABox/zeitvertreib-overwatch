@@ -67,11 +67,18 @@ Given the last 6 messages and a new message, decide if the new message violates 
 Only flag clear and severe violations.
 
 Note: Messages about in-game scenarios, roleplay actions, or hypothetical game mechanics are allowed, even if they include violence.
-Do not repeat or mention specific flagged words or phrases in your explanation — keep it vague to avoid conveying the original content.
+Do not repeat or hint at the exact words used in the flagged message.
 
 Reply with one of:
-- SAFE (if the message is acceptable)
-- FLAG: [one sentence explanation in German] (if the message violates rules) format: "FLAG: {username} hat eine {natur der verletzung} .. (Nachricht geschrieben.)"
+- SAFE
+- FLAG: {username} hat eine {Art der Regelverletzung} verfasst.
+
+Examples:
+FLAG: sayori1124 hat eine homophobe Beleidigung verfasst.
+FLAG: ctrl.r3venant hat eine Belästigung verfasst.
+FLAG: andromeda hat eine Drohung ausgesprochen.
+FLAG: nekochan hat unangemessene sexuelle Inhalte geteilt.
+FLAG: ghost42 hat über illegale Aktivitäten geschrieben.
 
 Previous messages:
 ${context}
