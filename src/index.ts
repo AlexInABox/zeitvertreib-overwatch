@@ -61,7 +61,7 @@ async function moderateMessage(message: Message) {
     })
     .join('\n');
 
-const prompt = `
+  const prompt = `
 You are a chill, context-aware Discord moderator for an SCP: Secret Laboratory gaming community.
 Your goal is to catch **severe toxicity** while allowing banter, opinions, and gaming jargon.
 
