@@ -136,13 +136,12 @@ ${message.author.username}: ${messageContent}
 }
 
 client.on(Events.MessageCreate, async (message) => {
-  if (message.interaction) {
-    if (
-      message.interaction!.commandName.includes('stats get') &&
-      message.deletable
-    ) {
-      message.delete();
-    }
+  if (
+    message.interaction &&
+    message.interaction!.commandName.includes('stats get') &&
+    message.deletable
+  ) {
+    message.delete();
   }
 
   await moderateMessage(message);
